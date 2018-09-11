@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .button {
+            height: 50px;
+            width: 100px;
+            padding: 0 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: url("http://127.0.0.1:3000/WechatIMG7214.jpeg") no-repeat left center;
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+        }
+
+        .button.active {
+            background: url("http://127.0.0.1:3000/WechatIMG7215.jpeg") no-repeat left center;
+        }
+
+        .button span {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+<p>add</p>
+<div class="button" id="button">
+    <span id="buttonText">0</span>
+</div>
+<p>sub</p>
+<div class="button" id="button2">
+    <span id="button2Text">10</span>
+</div>
+<p>add=>sun=>add</p>
+<div class="button" id="button3">
+    <span id="button3Text">10</span>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/systemjs/0.21.3/system.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script>
+  System.config({
+    baseURL: './',
+    meta: {
+      '*.css': {
+        loader: 'css'
+      }
+    }
+  })
+  System.import('http://127.0.0.1:3000/index.js').then(({Thumb, initial, addLikeNum, subLikeNum, twoWaryLikeNum}) => {
+    $.fn.extend({
+      initial,
+      addLikeNum,
+      subLikeNum,
+      twoWaryLikeNum
+    })
+  }).then(() => {
+    let baseUrl = 'http://127.0.0.1:3000/'
+    let num = 0
+    let button1 = $('#button').initial(num)
+    let button2 = $('#button2').initial(10)
+    let button3 = $('#button3').initial(10)
+    let flag = true
+    document.getElementById('button').addEventListener('click', function () {
+      button1.addLikeNum().css({'borderColor': 'pink'})
+      Http.of(`humb?num=${++num}`).get().then((data) => {
+        console.log(data.message)
+      })
+    })
+    document.getElementById('button2').addEventListener('click', function () {
+      button2.subLikeNum()
+    })
+    document.getElementById('button3').addEventListener('click', function () {
+      button3.twoWaryLikeNum(flag)
+      flag = !flag
+    })
+  })
+  class Http {
+    constructor (url, body) {
+      this.baseUrl = 'http://127.0.0.1:3000/'
+      this.url = this.baseUrl + url
+      this.body = body
+    }
+    get () {
+      return  axios.get(this.url)
+        .then(function (response) {
+          return response.data
+        })
+        .catch(function (error) {
+          alert('出错啦')
+        });
+    }
+    static of (url, body) {
+      return new Http(url, body)
+    }
+  }
+
+</script>
+</html>
